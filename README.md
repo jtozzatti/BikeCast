@@ -2,11 +2,11 @@
 
 ### Bike Sharing Demand Analysis & Forecasting
 
-> Projeto de **Data Science e Machine Learning** focado na análise e previsão da demanda por bicicletas compartilhadas.
+> Projeto de **Data Science e Machine Learning** focado na análise, previsão e visualização da demanda por bicicletas compartilhadas.
 
 O **BikeCast** nasceu como um projeto prático para aplicar, de ponta a ponta, conceitos de **Python, análise de dados, exploração de dados e Machine Learning** em um problema realista.
 
-A ideia é utilizar dados históricos de aluguel de bicicletas para entender **quais fatores influenciam a demanda** e, posteriormente, desenvolver um modelo capaz de **prever a quantidade de bicicletas que poderão ser utilizadas em determinado período**.
+A ideia é utilizar dados históricos de aluguel de bicicletas para entender **quais fatores influenciam a demanda**, desenvolver um modelo capaz de **prever a quantidade de bicicletas que poderão ser utilizadas em determinado período** e, ao final, transformar o projeto em uma **aplicação web interativa** para visualização das análises e utilização do modelo.
 
 ---
 
@@ -22,7 +22,9 @@ O projeto busca responder perguntas como:
 * Quais variáveis possuem maior relação com o número de aluguéis?
 * É possível utilizar os dados históricos para prever a demanda futura?
 
-O projeto será desenvolvido de forma incremental, passando desde a **compreensão e preparação dos dados** até a construção e avaliação de modelos de Machine Learning.
+Além da análise e modelagem, o objetivo final é disponibilizar os resultados através de uma **aplicação web**, permitindo explorar os principais insights do projeto e realizar previsões de demanda utilizando o modelo treinado.
+
+O projeto será desenvolvido de forma incremental, desde a **compreensão e preparação dos dados** até a construção, avaliação e disponibilização do modelo.
 
 ---
 
@@ -46,11 +48,15 @@ O desenvolvimento segue um fluxo inspirado no processo utilizado em projetos rea
 7. Avaliar
         ↓
 8. Entregar / comunicar
+        ↓
+9. Aplicação + Deploy
 ```
 
 A ideia não é tratar essas etapas como caixas isoladas.
 
 Conforme novas descobertas forem feitas, algumas decisões poderão ser revisitadas.
+
+A aplicação será desenvolvida somente após a conclusão da parte principal de Data Science e Machine Learning, utilizando os resultados construídos durante as etapas anteriores.
 
 ---
 
@@ -124,6 +130,9 @@ Ela representa o **número total de bicicletas alugadas em determinado período*
 * [x] Análise da relação entre umidade e demanda
 * [x] Análise da relação entre velocidade do vento e demanda
 * [ ] Análise da demanda entre os anos
+* [ ] Análise da sensação térmica (`atemp`)
+* [ ] Análise das principais correlações
+* [ ] Revisão dos principais insights
 * [ ] Conclusão da EDA
 
 ---
@@ -209,7 +218,51 @@ Por esse motivo, essas variáveis não serão utilizadas como preditoras do mode
 
 ---
 
+## 🌐 Aplicação Web
+
+Após a conclusão das etapas de análise e Machine Learning, o BikeCast será transformado em uma **aplicação web interativa**.
+
+A ideia é criar uma interface que permita apresentar o projeto de forma mais visual e acessível, sem remover a documentação técnica e o código disponíveis neste repositório.
+
+A aplicação deverá possuir duas áreas principais:
+
+### 📊 Dashboard
+
+Uma visualização dos principais resultados encontrados durante a análise exploratória, incluindo padrões relacionados a:
+
+* Horários
+* Dias úteis e não úteis
+* Meses e sazonalidade
+* Condições climáticas
+* Temperatura
+* Umidade
+* Outros fatores relevantes identificados durante a EDA
+
+### 🤖 Previsão de demanda
+
+Uma interface onde será possível informar características como horário, condições climáticas e outras variáveis utilizadas pelo modelo para obter uma **estimativa da demanda por bicicletas**.
+
+Exemplo conceitual:
+
+```text
+Horário:            18:00
+Temperatura:        ...
+Umidade:            ...
+Condição climática: ...
+Dia útil:           Sim
+
+        [ Prever demanda ]
+
+Demanda estimada: ...
+```
+
+A aplicação será desenvolvida somente depois que o modelo estiver treinado e avaliado, garantindo que a interface seja uma camada de apresentação de um projeto de Machine Learning já estruturado.
+
+---
+
 ## 🛠️ Tecnologias utilizadas
+
+Atualmente, o projeto utiliza:
 
 * Python
 * Pandas
@@ -218,7 +271,11 @@ Por esse motivo, essas variáveis não serão utilizadas como preditoras do mode
 * Git
 * GitHub
 
-Novas ferramentas e bibliotecas serão adicionadas conforme o projeto avançar.
+### Tecnologias previstas
+
+Conforme o projeto avançar, novas ferramentas serão adicionadas para as etapas de Machine Learning, aplicação e deploy.
+
+A aplicação web está planejada para ser desenvolvida utilizando **Streamlit**, mantendo grande parte do projeto dentro do ecossistema Python.
 
 ---
 
@@ -240,15 +297,31 @@ Machine Learning
 Avaliação dos modelos
         ↓
 Conclusões
+        ↓
+Aplicação Web
+        ↓
+Deploy
 ```
 
 ---
 
 ## 🎯 Objetivo final
 
-Ao final do projeto, será desenvolvido um modelo de Machine Learning capaz de utilizar informações temporais e climáticas para **estimar a demanda por bicicletas compartilhadas**.
+Ao final do projeto, o BikeCast deverá possuir três componentes principais:
 
-Além do modelo, o projeto busca documentar todo o processo de análise, desde a compreensão dos dados até a interpretação dos resultados.
+1. **Análise de dados**
+
+   Exploração e documentação dos principais padrões encontrados no histórico de utilização das bicicletas.
+
+2. **Modelo de Machine Learning**
+
+   Modelo capaz de utilizar informações temporais e climáticas para estimar a demanda por bicicletas compartilhadas.
+
+3. **Aplicação Web**
+
+   Interface visual para apresentar os principais insights da análise e permitir a utilização do modelo para realizar previsões.
+
+Dessa forma, o projeto busca percorrer um fluxo completo, partindo dos dados brutos até uma solução de Machine Learning que possa ser acessada através de uma aplicação online.
 
 ---
 
