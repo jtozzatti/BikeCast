@@ -243,3 +243,92 @@ plt.ylabel("Quantidade de aluguéis")
 
 # Exibe o gráfico
 plt.show()
+
+# Calcula a média de aluguéis em cada ano
+media_por_ano = df.groupby("yr")["cnt"].mean()
+
+# Mostra o resultado
+print(media_por_ano)
+
+# Cria um gráfico comparando a demanda média entre os dois anos
+plt.bar(media_por_ano.index, media_por_ano.values)
+
+# Adiciona título e nomes dos eixos
+plt.title("Média de aluguéis por ano")
+plt.xlabel("Ano")
+plt.ylabel("Média de aluguéis")
+
+# Mostra apenas os códigos dos dois anos
+plt.xticks([0, 1])
+
+plt.show()
+
+# Calcula a média de aluguéis para cada mês de cada ano
+media_mes_ano = df.groupby(["mnth", "yr"])["cnt"].mean().unstack()
+
+# Mostra o resultado
+print(media_mes_ano)
+
+# Plota a demanda mensal do primeiro ano
+plt.plot(
+    media_mes_ano.index,
+    media_mes_ano[0],
+    marker="o",
+    label="Ano 0"
+)
+
+# Plota a demanda mensal do segundo ano
+plt.plot(
+    media_mes_ano.index,
+    media_mes_ano[1],
+    marker="o",
+    label="Ano 1"
+)
+
+# Configura o gráfico
+plt.title("Demanda média mensal por ano")
+plt.xlabel("Mês")
+plt.ylabel("Média de aluguéis")
+plt.xticks(range(1, 13))
+plt.legend()
+
+plt.show()
+
+# Calcula a correlação entre temperatura e sensação térmica
+correlacao_temp_atemp = df["temp"].corr(df["atemp"])
+
+# Mostra o resultado
+print(correlacao_temp_atemp)
+
+# Calcula a correlação entre sensação térmica e demanda
+correlacao_atemp = df["atemp"].corr(df["cnt"])
+
+# Mostra o resultado
+print(correlacao_atemp)
+
+# Seleciona as principais variáveis numéricas contínuas
+variaveis_numericas = [
+    "temp",
+    "atemp",
+    "hum",
+    "windspeed",
+    "cnt"
+]
+
+# Calcula a correlação entre elas
+matriz_correlacao = df[variaveis_numericas].corr()
+
+# Mostra a matriz
+print(matriz_correlacao)
+
+# Calcula a média de aluguéis em dias normais e feriados
+media_feriado = df.groupby("holiday")["cnt"].mean()
+
+# Mostra o resultado
+print(media_feriado)
+
+# Conta quantos registros existem em cada categoria
+quantidade_feriado = df["holiday"].value_counts().sort_index()
+
+# Mostra o resultado
+print(quantidade_feriado)
