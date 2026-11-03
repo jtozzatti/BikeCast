@@ -1,334 +1,311 @@
-# Importamos o pandas para trabalhar com os dados
+
+# ==========================================
+# BIKECAST — FEATURE ENGINEERING
+# ==========================================
+
+# Importa o Pandas para trabalhar com os dados
 import pandas as pd
 
-# Lemos o arquivo CSV
+
+# ==========================================
+# 1. CARREGAMENTO DOS DADOS
+# ==========================================
+
+# Lê o dataset de aluguel de bicicletas
 df = pd.read_csv("data/hour.csv")
 
-# Mostramos as primeiras 5 linhas
-print(df.head())
-
-# Mostra a quantidade de linhas e colunas
-print(df.shape)
-
-# Mostra o nome das colunas
-print(df.columns)
-
-# Mostra o tipo de dado de cada coluna
-print(df.dtypes)
-
-# Conta quantos valores vazios existem em cada coluna
-print(df.isnull().sum())
-
-# Converte a coluna dteday para o tipo datetime e logo em seguida mostra o tipo de dado de cada coluna
+# Converte a coluna de data para datetime
 df["dteday"] = pd.to_datetime(df["dteday"])
-print(df.dtypes)
 
-# Mostra os valores únicos de algumas colunas
-print(df["season"].unique())
-print(df["weathersit"].unique())
-print(df["hr"].unique())
 
-# Mostra a contagem de valores únicos de algumas colunas
-print(df.describe())
+# ==========================================
+# 2. VERIFICAÇÕES INICIAIS
+# ==========================================
 
-# Mostra a quantidade de valores duplicados
-print(df.duplicated().sum())
+# Confere o tamanho do dataset
+print("Dataset:", df.shape)
 
-# Mostra todos os valores diferentes que aparecem na coluna "holiday"
-print(df["holiday"].unique())
+# Confere se existem valores ausentes
+print("Valores ausentes:", df.isnull().sum().sum())
 
-# Mostra todos os valores diferentes que aparecem na coluna "weekday"
-print(df["weekday"].unique())
+# Confere se existem registros duplicados
+print("Duplicados:", df.duplicated().sum())
 
-# Mostra todos os valores diferentes que aparecem na coluna "workingday"
-print(df["workingday"].unique())
-
-# Mostra todos os valores diferentes que aparecem na coluna "temp"
-print(df["temp"].unique())
-
-# Verifica se existem registros repetidos considerando apenas a data e a hora
-print(df.duplicated(subset=["dteday", "hr"]).sum())
-
-# Verifica se a soma de usuários casuais e registrados é igual ao total de usuários
-print((df["casual"] + df["registered"] == df["cnt"]).all())
-
-# Mostra o menor e o maior valor das variáveis climáticas
-print(df[["temp", "atemp", "hum", "windspeed"]].agg(["min", "max"]))
-
-# Mostra o menor e o maior número de bicicletas alugadas em um registro
-print(df["cnt"].agg(["min", "max"]))
-
-# Mostra quantos valores diferentes existem em cada variável categórica
+# Confere se o total de aluguéis está consistente
 print(
-    df[
-        ["season", "yr", "mnth", "hr", "holiday",
-         "weekday", "workingday", "weathersit"]
-    ].nunique()
+    "Consistência do target:",
+    (df["casual"] + df["registered"] == df["cnt"]).all()
 )
-
-# Mostra algumas estatísticas da variável que queremos prever
-print(df["cnt"].describe())
 
 
 # ==========================================
-# ANÁLISE EXPLORATÓRIA DOS DADOS (EDA)
+# 3. SEPARAÇÃO DAS FEATURES E TARGET
 # ==========================================
 
-# Calcula a média de aluguéis para cada hora do dia
-media_por_hora = df.groupby("hr")["cnt"].mean()
+# Define a variável que queremos prever
+y = df["cnt"]
 
-# Mostra a média de cada hora
-print(media_por_hora)
+# Remove a variável alvo e colunas que não serão
+# utilizadas como entradas nesta primeira versão
+X = df.drop(columns=[
+    "cnt",
+    "casual",
+    "registered",
+    "instant",
+    "dteday"
+])
 
-# Importa a biblioteca matplotlib para criar gráficos
-import matplotlib.pyplot as plt
+# Mostra o tamanho dos conjuntos
+print("\nFeatures (X):", X.shape)
+print("Target (y):", y.shape)
 
-# Cria um gráfico com a média de aluguéis para cada hora
-plt.plot(media_por_hora)
+# Mostra as variáveis disponíveis para o modelo
+print("\nVariáveis em X:")
+print(X.columns.tolist())
 
-# Define o título do gráfico
-plt.title("Média de aluguéis por hora")
+# ==========================================
+# 4. CLASSIFICAÇÃO DAS FEATURES
+# ==========================================
 
-# Define os nomes dos eixos
-plt.xlabel("Hora")
-plt.ylabel("Média de aluguéis")
+# Variáveis que representam categorias
+categoricas = ["season", "weathersit"]
 
-# Mostra o gráfico
-plt.show()
+# Variáveis que representam valores binários
+binarias = ["yr", "holiday", "workingday"]
 
+# Variáveis relacionadas ao tempo e calendário
+temporais = ["mnth", "hr", "weekday"]
 
-# Calcula a média de aluguéis por hora separando
-# dias úteis (1) e dias não úteis (0)
-media_hora_trabalho = df.groupby(
-    ["hr", "workingday"]
-)["cnt"].mean()
+# Variáveis numéricas contínuas
+numericas = ["temp", "atemp", "hum", "windspeed"]
 
-print(media_hora_trabalho)
+# Mostra a quantidade de variáveis em cada grupo
+print("\nCategóricas:", len(categoricas))
+print("Binárias:", len(binarias))
+print("Temporais:", len(temporais))
+print("Numéricas:", len(numericas))
 
+# ==========================================
+# 5. ONE-HOT ENCODING
+# ==========================================
 
-# Organiza os dados para deixar dias úteis e não úteis em colunas separadas
-media_hora_trabalho = df.groupby(
-    ["hr", "workingday"]
-)["cnt"].mean().unstack()
-
-print(media_hora_trabalho)
-
-# Cria uma linha para os dias não úteis
-plt.plot(
-    media_hora_trabalho.index,
-    media_hora_trabalho[0],
-    label="Dia não útil"
+# Transforma as categorias de season em colunas binárias
+season_encoded = pd.get_dummies(
+    X["season"],
+    prefix="season",
+    dtype=int
 )
 
-# Cria uma linha para os dias úteis
-plt.plot(
-    media_hora_trabalho.index,
-    media_hora_trabalho[1],
-    label="Dia útil"
+# Mostra as primeiras 5 linhas
+print(season_encoded.head())
+
+# Mostra o tamanho da nova tabela
+print("Formato:", season_encoded.shape)
+
+# Transforma as categorias climáticas em colunas binárias
+weather_encoded = pd.get_dummies(
+    X["weathersit"],
+    prefix="weather",
+    dtype=int
 )
 
-# Adiciona informações ao gráfico
-plt.title("Média de aluguéis por hora")
-plt.xlabel("Hora")
-plt.ylabel("Média de aluguéis")
+# Mostra as primeiras 5 linhas
+print(weather_encoded.head())
 
-# Mostra qual linha representa cada tipo de dia
-plt.legend()
+# Mostra o tamanho da nova tabela
+print("Formato:", weather_encoded.shape)
 
-# Exibe o gráfico
-plt.show()
+# Conta quantos registros pertencem a cada categoria
+print("\nQuantidade por categoria:")
+print(weather_encoded.sum())
 
+# ==========================================
+# 6. INTEGRAÇÃO DAS FEATURES
+# ==========================================
 
-# Calcula a média de aluguéis para cada dia da semana
-media_por_dia = df.groupby("weekday")["cnt"].mean()
+# Remove as colunas categóricas originais
+X_encoded = X.drop(columns=["season", "weathersit"])
 
-# Mostra o resultado
-print(media_por_dia)
-
-
-# Calcula a média de aluguéis em cada mês
-media_por_mes = df.groupby("mnth")["cnt"].mean()
-
-# Mostra o resultado
-print(media_por_mes)
-
-# Cria um gráfico mostrando a média de aluguéis em cada mês
-plt.plot(media_por_mes.index, media_por_mes.values, marker="o")
-
-# Adiciona informações ao gráfico
-plt.title("Média de aluguéis por mês")
-plt.xlabel("Mês")
-plt.ylabel("Média de aluguéis")
-
-# Mostra todos os meses no eixo X
-plt.xticks(range(1, 13))
-
-# Exibe o gráfico
-plt.show()
-
-
-# Calcula a média de aluguéis para cada estação do ano
-media_por_estacao = df.groupby("season")["cnt"].mean()
-
-# Mostra o resultado
-print(media_por_estacao)
-
-
-# Calcula a média de aluguéis para cada condição climática
-media_por_clima = df.groupby("weathersit")["cnt"].mean()
-
-# Mostra o resultado
-print(media_por_clima)
-
-
-# Conta quantos registros existem em cada condição climática
-quantidade_por_clima = df["weathersit"].value_counts().sort_index()
-
-# Mostra o resultado
-print(quantidade_por_clima)
-
-
-# Mostra temperatura e quantidade de aluguéis
-print(df[["temp", "cnt"]].head(10))
-
-
-# Calcula a correlação entre temperatura e quantidade de aluguéis
-correlacao_temp = df["temp"].corr(df["cnt"])
-
-# Mostra o resultado
-print(correlacao_temp)
-
-
-# Cria um gráfico de dispersão entre temperatura e aluguéis
-plt.scatter(df["temp"], df["cnt"], alpha=0.2)
-
-# Adiciona informações ao gráfico
-plt.title("Temperatura x quantidade de aluguéis")
-plt.xlabel("Temperatura normalizada")
-plt.ylabel("Quantidade de aluguéis")
-
-# Exibe o gráfico
-plt.show()
-
-# Calcula a correlação entre umidade e quantidade de aluguéis
-correlacao_umidade = df["hum"].corr(df["cnt"])
-
-# Mostra o resultado
-print(correlacao_umidade)
-
-# Cria um gráfico de dispersão entre umidade e aluguéis
-plt.scatter(df["hum"], df["cnt"], alpha=0.2)
-
-# Adiciona informações ao gráfico
-plt.title("Umidade x quantidade de aluguéis")
-plt.xlabel("Umidade normalizada")
-plt.ylabel("Quantidade de aluguéis")
-
-# Exibe o gráfico
-plt.show()
-
-# Calcula a correlação entre velocidade do vento e quantidade de aluguéis
-correlacao_vento = df["windspeed"].corr(df["cnt"])
-
-# Mostra o resultado
-print(correlacao_vento)
-
-# Cria um gráfico de dispersão entre velocidade do vento e aluguéis
-plt.scatter(df["windspeed"], df["cnt"], alpha=0.2)
-
-# Adiciona informações ao gráfico
-plt.title("Velocidade do vento x quantidade de aluguéis")
-plt.xlabel("Velocidade do vento normalizada")
-plt.ylabel("Quantidade de aluguéis")
-
-# Exibe o gráfico
-plt.show()
-
-# Calcula a média de aluguéis em cada ano
-media_por_ano = df.groupby("yr")["cnt"].mean()
-
-# Mostra o resultado
-print(media_por_ano)
-
-# Cria um gráfico comparando a demanda média entre os dois anos
-plt.bar(media_por_ano.index, media_por_ano.values)
-
-# Adiciona título e nomes dos eixos
-plt.title("Média de aluguéis por ano")
-plt.xlabel("Ano")
-plt.ylabel("Média de aluguéis")
-
-# Mostra apenas os códigos dos dois anos
-plt.xticks([0, 1])
-
-plt.show()
-
-# Calcula a média de aluguéis para cada mês de cada ano
-media_mes_ano = df.groupby(["mnth", "yr"])["cnt"].mean().unstack()
-
-# Mostra o resultado
-print(media_mes_ano)
-
-# Plota a demanda mensal do primeiro ano
-plt.plot(
-    media_mes_ano.index,
-    media_mes_ano[0],
-    marker="o",
-    label="Ano 0"
+# Adiciona as novas colunas binárias
+X_encoded = pd.concat(
+    [X_encoded, season_encoded, weather_encoded],
+    axis=1
 )
 
-# Plota a demanda mensal do segundo ano
-plt.plot(
-    media_mes_ano.index,
-    media_mes_ano[1],
-    marker="o",
-    label="Ano 1"
+# Confere o resultado
+print("\nNovo formato:", X_encoded.shape)
+print("\nFeatures transformadas:")
+print(X_encoded.columns.tolist())
+
+# ==========================================
+# 7. FEATURES CÍCLICAS
+# ==========================================
+
+# Importa funções matemáticas
+import numpy as np
+
+# Representa o horário em um ciclo de 24 horas
+X_encoded["hr_sin"] = np.sin(
+    2 * np.pi * X_encoded["hr"] / 24
 )
 
-# Configura o gráfico
-plt.title("Demanda média mensal por ano")
-plt.xlabel("Mês")
-plt.ylabel("Média de aluguéis")
-plt.xticks(range(1, 13))
-plt.legend()
+X_encoded["hr_cos"] = np.cos(
+    2 * np.pi * X_encoded["hr"] / 24
+)
 
-plt.show()
+# Mostra as novas variáveis para cada horário
+print(
+    X_encoded[["hr", "hr_sin", "hr_cos"]]
+    .drop_duplicates()
+    .sort_values("hr")
+    .round(3)
+)
 
-# Calcula a correlação entre temperatura e sensação térmica
-correlacao_temp_atemp = df["temp"].corr(df["atemp"])
+# ==========================================
+# 8. TRANSFORMAÇÃO CÍCLICA DOS MESES
+# ==========================================
 
-# Mostra o resultado
-print(correlacao_temp_atemp)
+# Representa os meses em um ciclo de 12 meses
+X_encoded["mnth_sin"] = np.sin(
+    2 * np.pi * (X_encoded["mnth"] - 1) / 12
+)
 
-# Calcula a correlação entre sensação térmica e demanda
-correlacao_atemp = df["atemp"].corr(df["cnt"])
+X_encoded["mnth_cos"] = np.cos(
+    2 * np.pi * (X_encoded["mnth"] - 1) / 12
+)
 
-# Mostra o resultado
-print(correlacao_atemp)
+# Mostra a representação dos 12 meses
+print(
+    X_encoded[["mnth", "mnth_sin", "mnth_cos"]]
+    .drop_duplicates()
+    .sort_values("mnth")
+    .round(3)
+)
 
-# Seleciona as principais variáveis numéricas contínuas
-variaveis_numericas = [
-    "temp",
-    "atemp",
-    "hum",
-    "windspeed",
-    "cnt"
-]
+# ==========================================
+# 9. TRANSFORMAÇÃO CÍCLICA DA SEMANA
+# ==========================================
 
-# Calcula a correlação entre elas
-matriz_correlacao = df[variaveis_numericas].corr()
+# Representa os dias da semana em um ciclo de 7 dias
+X_encoded["weekday_sin"] = np.sin(
+    2 * np.pi * X_encoded["weekday"] / 7
+)
 
-# Mostra a matriz
-print(matriz_correlacao)
+X_encoded["weekday_cos"] = np.cos(
+    2 * np.pi * X_encoded["weekday"] / 7
+)
 
-# Calcula a média de aluguéis em dias normais e feriados
-media_feriado = df.groupby("holiday")["cnt"].mean()
+# Mostra a representação dos 7 dias da semana
+print(
+    X_encoded[["weekday", "weekday_sin", "weekday_cos"]]
+    .drop_duplicates()
+    .sort_values("weekday")
+    .round(3)
+)
 
-# Mostra o resultado
-print(media_feriado)
+# ==========================================
+# 10. REVISÃO DAS FEATURES
+# ==========================================
 
-# Conta quantos registros existem em cada categoria
-quantidade_feriado = df["holiday"].value_counts().sort_index()
+# Mostra a quantidade de registros e features
+print("\nFormato atual:", X_encoded.shape)
 
-# Mostra o resultado
-print(quantidade_feriado)
+# Verifica se existem valores ausentes
+print("Valores ausentes:", X_encoded.isnull().sum().sum())
+
+# Mostra todas as features disponíveis
+print("\nFeatures atuais:")
+print(X_encoded.columns.tolist())
+
+# Confere se os índices de X e y continuam alinhados
+print("\nÍndices alinhados:", X_encoded.index.equals(y.index))
+
+# ==========================================
+# 11. COMPARAÇÃO DE FEATURES CORRELACIONADAS
+# ==========================================
+
+# Versão A: mantém temperatura e sensação térmica
+X_completo = X_encoded.copy()
+
+# Versão B: remove apenas a sensação térmica
+X_sem_atemp = X_encoded.drop(columns=["atemp"])
+
+# Compara a quantidade de features
+print("\nVersão completa:", X_completo.shape)
+print("Versão sem atemp:", X_sem_atemp.shape)
+
+# Confirma se atemp foi removida da versão B
+print(
+    "atemp na versão completa:",
+    "atemp" in X_completo.columns
+)
+
+print(
+    "atemp na versão reduzida:",
+    "atemp" in X_sem_atemp.columns
+)
+
+# ==========================================
+# 12. COMPARAÇÃO DAS FEATURES TEMPORAIS
+# ==========================================
+
+# Versão A: mantém as variáveis originais e cíclicas
+X_temporal_completo = X_completo.copy()
+
+# Versão B: mantém apenas as versões cíclicas
+# de hr, mnth e weekday
+X_temporal_ciclico = X_completo.drop(
+    columns=["hr", "mnth", "weekday"]
+)
+
+# Compara os formatos
+print("\nTemporal completo:", X_temporal_completo.shape)
+print("Temporal cíclico:", X_temporal_ciclico.shape)
+
+# Verifica quais colunas foram removidas
+print(
+    "\nColunas removidas:",
+    set(X_temporal_completo.columns)
+    - set(X_temporal_ciclico.columns)
+)
+
+# ==========================================
+# 13. ORGANIZAÇÃO DOS EXPERIMENTOS
+# ==========================================
+
+# Organiza as versões para comparação futura
+experimentos = {
+    "completo": X_completo,
+    "sem_atemp": X_sem_atemp,
+    "temporal_ciclico": X_temporal_ciclico
+}
+
+# Mostra o tamanho de cada conjunto
+for nome, dados in experimentos.items():
+    print(
+        f"{nome}: {dados.shape[0]} registros, "
+        f"{dados.shape[1]} features"
+    )
+
+# ==========================================
+# 14. VALIDAÇÃO FINAL DAS FEATURES
+# ==========================================
+
+# Verifica os tipos de dados das features
+print("\nTipos de dados:")
+print(X_completo.dtypes.value_counts())
+
+# Verifica se todas as colunas são numéricas
+print(
+    "\nTodas as features são numéricas:",
+    all(pd.api.types.is_numeric_dtype(tipo)
+        for tipo in X_completo.dtypes)
+)
+
+# Confere se todos os experimentos preservaram
+# a mesma quantidade de registros do target
+for nome, dados in experimentos.items():
+    print(
+        f"{nome} alinhado:",
+        dados.index.equals(y.index)
+    )
