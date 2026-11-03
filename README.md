@@ -3,6 +3,7 @@
 ### Bike Sharing Demand Analysis & Forecasting
 
 > Projeto de **Data Science e Machine Learning** focado na análise, previsão e visualização da demanda por bicicletas compartilhadas.
+> 
 
 O **BikeCast** nasceu como um projeto prático para aplicar, de ponta a ponta, conceitos de **Python, análise de dados, exploração de dados e Machine Learning** em um problema realista.
 
@@ -16,16 +17,16 @@ Além de construir o projeto, um dos objetivos é documentar o processo de desen
 
 O projeto busca responder perguntas como:
 
-* Em quais horários existe maior demanda?
-* Como a demanda muda ao longo dos dias da semana?
-* Existe diferença de utilização entre estações do ano?
-* Como as condições climáticas estão relacionadas ao uso das bicicletas?
-* A demanda é diferente entre dias úteis e dias não úteis?
-* Existe diferença entre feriados e dias normais?
-* A demanda mudou entre os anos presentes no dataset?
-* Quais variáveis apresentam maior relação com o número de aluguéis?
-* Existem variáveis que carregam informações muito semelhantes?
-* É possível utilizar os dados históricos para prever a demanda?
+- Em quais horários existe maior demanda?
+- Como a demanda muda ao longo dos dias da semana?
+- Existe diferença de utilização entre estações do ano?
+- Como as condições climáticas estão relacionadas ao uso das bicicletas?
+- A demanda é diferente entre dias úteis e dias não úteis?
+- Existe diferença entre feriados e dias normais?
+- A demanda mudou entre os anos presentes no dataset?
+- Quais variáveis apresentam maior relação com o número de aluguéis?
+- Existem variáveis que carregam informações muito semelhantes?
+- É possível utilizar os dados históricos para prever a demanda?
 
 Além da análise e modelagem, o objetivo final é disponibilizar os resultados através de uma **aplicação web**, permitindo explorar os principais insights do projeto e realizar previsões de demanda utilizando o modelo treinado.
 
@@ -37,7 +38,7 @@ O projeto está sendo desenvolvido de forma incremental, desde a **compreensão 
 
 O desenvolvimento segue um fluxo inspirado no processo utilizado em projetos de Data Science:
 
-```text
+```
 1. Entender o problema                  ✅
         ↓
 2. Entender os dados                    ✅
@@ -46,9 +47,9 @@ O desenvolvimento segue um fluxo inspirado no processo utilizado em projetos de 
         ↓
 4. Explorar e encontrar padrões (EDA)   ✅
         ↓
-5. Criar features                       ⏭️
+5. Criar features                       ✅
         ↓
-6. Modelar
+6. Modelar                              ⏭️
         ↓
 7. Avaliar
         ↓
@@ -71,27 +72,27 @@ O projeto utiliza o **Bike Sharing Dataset**, disponibilizado pelo **UCI Machine
 
 O dataset utilizado contém **17.379 registros e 17 variáveis**, com informações relacionadas ao uso de um sistema de bicicletas compartilhadas, incluindo:
 
-* Data
-* Hora
-* Estação do ano
-* Mês
-* Dia da semana
-* Feriado
-* Dia útil
-* Condições climáticas
-* Temperatura
-* Sensação térmica
-* Umidade
-* Velocidade do vento
-* Usuários casuais
-* Usuários registrados
-* Total de bicicletas alugadas
+- Data
+- Hora
+- Estação do ano
+- Mês
+- Dia da semana
+- Feriado
+- Dia útil
+- Condições climáticas
+- Temperatura
+- Sensação térmica
+- Umidade
+- Velocidade do vento
+- Usuários casuais
+- Usuários registrados
+- Total de bicicletas alugadas
 
 ### Variável alvo
 
 A principal variável que queremos prever é:
 
-```text
+```
 cnt
 ```
 
@@ -103,55 +104,95 @@ Ela representa o **número total de bicicletas alugadas em determinado período*
 
 ### Entendimento dos dados
 
-* [x] Dataset carregado com Pandas
-* [x] Estrutura do DataFrame analisada
-* [x] Número de linhas e colunas identificado
-* [x] Tipos das variáveis analisados
-* [x] Variáveis e seus significados estudados
-* [x] Variável alvo definida
+- [x]  Dataset carregado com Pandas
+- [x]  Estrutura do DataFrame analisada
+- [x]  Número de linhas e colunas identificado
+- [x]  Tipos das variáveis analisados
+- [x]  Variáveis e seus significados estudados
+- [x]  Variável alvo definida
 
 ### Limpeza e preparação inicial
 
-* [x] Conversão da variável de data para `datetime`
-* [x] Verificação de valores ausentes
-* [x] Verificação de linhas duplicadas
-* [x] Verificação de registros duplicados por data + hora
-* [x] Verificação dos valores das variáveis categóricas
-* [x] Verificação das faixas das variáveis climáticas
-* [x] Verificação da faixa da variável `cnt`
-* [x] Verificação da consistência `casual + registered = cnt`
-* [x] Identificação de Data Leakage nas variáveis `casual` e `registered`
+- [x]  Conversão da variável de data para `datetime`
+- [x]  Verificação de valores ausentes
+- [x]  Verificação de linhas duplicadas
+- [x]  Verificação de registros duplicados por data + hora
+- [x]  Verificação dos valores das variáveis categóricas
+- [x]  Verificação das faixas das variáveis climáticas
+- [x]  Verificação da faixa da variável `cnt`
+- [x]  Verificação da consistência `casual + registered = cnt`
+- [x]  Identificação de Data Leakage nas variáveis `casual` e `registered`
 
 ### Análise Exploratória dos Dados (EDA)
 
-* [x] Análise estatística da variável alvo `cnt`
-* [x] Análise da demanda média por hora
-* [x] Comparação da demanda por hora entre dias úteis e dias não úteis
-* [x] Análise da demanda média por dia da semana
-* [x] Análise da demanda média por mês
-* [x] Análise da demanda por estação do ano
-* [x] Análise da demanda por condição climática
-* [x] Verificação da quantidade de registros por condição climática
-* [x] Análise da relação entre temperatura e demanda
-* [x] Análise da relação entre umidade e demanda
-* [x] Análise da relação entre velocidade do vento e demanda
-* [x] Comparação da demanda entre os dois anos
-* [x] Comparação da demanda mensal entre os anos
-* [x] Análise da sensação térmica (`atemp`)
-* [x] Análise da relação entre `temp` e `atemp`
-* [x] Análise das principais correlações
-* [x] Análise da demanda em feriados
-* [x] Verificação da quantidade de registros de feriados
-* [x] Revisão dos principais insights
-* [x] Conclusão da EDA
+- [x]  Análise estatística da variável alvo `cnt`
+- [x]  Análise da demanda média por hora
+- [x]  Comparação da demanda por hora entre dias úteis e dias não úteis
+- [x]  Análise da demanda média por dia da semana
+- [x]  Análise da demanda média por mês
+- [x]  Análise da demanda por estação do ano
+- [x]  Análise da demanda por condição climática
+- [x]  Verificação da quantidade de registros por condição climática
+- [x]  Análise da relação entre temperatura e demanda
+- [x]  Análise da relação entre umidade e demanda
+- [x]  Análise da relação entre velocidade do vento e demanda
+- [x]  Comparação da demanda entre os dois anos
+- [x]  Comparação da demanda mensal entre os anos
+- [x]  Análise da sensação térmica (`atemp`)
+- [x]  Análise da relação entre `temp` e `atemp`
+- [x]  Análise das principais correlações
+- [x]  Análise da demanda em feriados
+- [x]  Verificação da quantidade de registros de feriados
+- [x]  Revisão dos principais insights
+- [x]  Conclusão da EDA
 
 ### Feature Engineering
 
-* [ ] Definição das features utilizadas pelo modelo
-* [ ] Tratamento das variáveis categóricas
-* [ ] Avaliação da redundância entre `temp` e `atemp`
-* [ ] Avaliação de possíveis novas features
-* [ ] Preparação do conjunto final para modelagem
+- [x]  Separação das features (`X`) e do target (`y = cnt`)
+- [x]  Exclusão de `casual` e `registered` para evitar Data Leakage
+- [x]  Remoção de `instant` e `dteday` das entradas iniciais (data preservada para a divisão temporal)
+- [x]  Classificação das variáveis categóricas, binárias, temporais e numéricas
+- [x]  One-Hot Encoding de `season` e `weathersit`
+- [x]  Criação de representações cíclicas (`sin` e `cos`) para `hr`, `mnth` e `weekday`
+- [x]  Criação de uma versão alternativa sem `atemp`, devido à alta correlação com `temp`
+- [x]  Criação de uma versão temporal apenas com as representações cíclicas
+- [x]  Organização de três configurações iniciais de features para comparação
+- [x]  Verificação de valores ausentes, tipos numéricos e alinhamento com o target
+- [x]  Conclusão da construção inicial das features
+
+### Modelagem — próxima etapa
+
+- [ ]  Definir divisão cronológica de treino, validação e teste
+- [ ]  Estruturar o pré-processamento para evitar vazamento de informações entre períodos
+- [ ]  Treinar um modelo baseline e modelos de regressão
+- [ ]  Comparar os conjuntos de features usando validação temporal
+- [ ]  Selecionar a abordagem para avaliação final
+
+---
+
+# 🧩 Feature Engineering — Etapa 5 concluída
+
+Com base nos resultados da EDA, foram preparadas diferentes representações das variáveis de entrada para os primeiros experimentos de Machine Learning. O conjunto original de entradas possui **17.379 registros e 12 features**, com `cnt` separado como target.
+
+### Transformações realizadas
+
+- **One-Hot Encoding:** `season` e `weathersit` foram transformadas em colunas binárias, evitando tratar códigos de categorias como uma escala numérica.
+- **Variáveis cíclicas:** foram criadas `hr_sin`, `hr_cos`, `mnth_sin`, `mnth_cos`, `weekday_sin` e `weekday_cos` para representar ciclos diários, anuais e semanais.
+- **Prevenção de Data Leakage:** `casual` e `registered` foram excluídas das entradas, pois sua soma corresponde diretamente a `cnt`.
+- **Análise de redundância:** a alta correlação entre `temp` e `atemp` motivou uma versão alternativa sem sensação térmica, sem assumir antecipadamente que sua exclusão melhora o modelo.
+
+### Conjuntos preparados para comparação
+
+| Experimento | Registros | Features | Hipótese investigada |
+| --- | --- | --- | --- |
+| `completo` | 17.379 | 24 | Manter as variáveis originais selecionadas e as transformações criadas |
+| `sem_atemp` | 17.379 | 23 | Verificar o impacto de retirar a sensação térmica |
+| `temporal_ciclico` | 17.379 | 21 | Verificar o impacto de retirar `hr`, `mnth` e `weekday` originais, mantendo suas versões cíclicas |
+
+Na validação do conjunto completo, foram identificadas **14 colunas `int64` e 10 `float64`**. Todas as features são numéricas, não foram encontrados valores ausentes e os três conjuntos preservam o alinhamento dos índices com o target.
+
+> **Importante:** essas configurações ainda não foram comparadas por desempenho preditivo. A escolha das melhores features dependerá de experimentos com validação temporal, sem utilizar o conjunto de teste para selecionar transformações. O pré-processamento também deverá ser reproduzível para dados futuros.
+> 
 
 ---
 
@@ -167,8 +208,8 @@ A demanda varia bastante ao longo do dia.
 
 Nos dias úteis, foram identificados dois períodos de maior utilização:
 
-* Por volta das **8h**
-* Entre **17h e 18h**
+- Por volta das **8h**
+- Entre **17h e 18h**
 
 Já nos dias não úteis, a demanda apresenta um comportamento mais distribuído, crescendo durante a manhã e permanecendo elevada principalmente entre o final da manhã e a tarde.
 
@@ -184,7 +225,7 @@ A interação entre horário e tipo de dia revelou dois comportamentos bastante 
 
 Nos dias úteis, os principais valores médios observados foram:
 
-```text
+```
 8h  → ~477 aluguéis
 17h → ~525 aluguéis
 18h → ~492 aluguéis
@@ -212,7 +253,7 @@ A demanda apresenta um padrão sazonal claro ao longo dos meses.
 
 De forma geral:
 
-```text
+```
 Jan → Jun: crescimento da demanda
 Jun → Set: demanda em patamar elevado
 Out → Dez: queda da demanda
@@ -220,7 +261,7 @@ Out → Dez: queda da demanda
 
 As categorias de estação do ano também apresentaram diferenças relevantes.
 
-```text
+```
 season 1 → ~111
 season 2 → ~208
 season 3 → ~236
@@ -235,7 +276,7 @@ A categoria `season = 3` apresentou a maior demanda média, enquanto `season = 1
 
 As condições climáticas apresentaram diferenças relevantes na demanda média.
 
-```text
+```
 weathersit 1 → ~205
 weathersit 2 → ~175
 weathersit 3 → ~112
@@ -244,7 +285,7 @@ weathersit 4 → ~74
 
 Entretanto, a distribuição dos registros mostrou:
 
-```text
+```
 weathersit 1 → 11.413 registros
 weathersit 2 →  4.544 registros
 weathersit 3 →  1.419 registros
@@ -263,7 +304,7 @@ Essa análise reforçou uma lição importante durante a EDA: **não basta anali
 
 A temperatura apresentou correlação de aproximadamente:
 
-```text
+```
 temp × cnt ≈ +0.405
 ```
 
@@ -277,7 +318,7 @@ Valores maiores de temperatura tendem a aparecer associados a demandas maiores, 
 
 A umidade apresentou correlação de aproximadamente:
 
-```text
+```
 hum × cnt ≈ -0.323
 ```
 
@@ -291,7 +332,7 @@ Nos dados analisados, valores maiores de umidade tendem a aparecer associados a 
 
 A velocidade do vento apresentou:
 
-```text
+```
 windspeed × cnt ≈ +0.093
 ```
 
@@ -305,7 +346,7 @@ Isso não significa automaticamente que a variável seja inútil para Machine Le
 
 A demanda apresentou uma diferença considerável entre os dois anos presentes no dataset.
 
-```text
+```
 Ano 0 → média ≈ 143,8
 Ano 1 → média ≈ 234,7
 ```
@@ -326,13 +367,13 @@ Isso indica que `yr` carrega informação relevante sobre a demanda.
 
 Durante a análise também foi identificada uma correlação extremamente alta entre `temp` e `atemp`:
 
-```text
+```
 temp × atemp ≈ +0.988
 ```
 
 Além disso, as duas possuem praticamente a mesma correlação com a variável alvo:
 
-```text
+```
 temp  × cnt ≈ +0.405
 atemp × cnt ≈ +0.401
 ```
@@ -349,7 +390,7 @@ A possível redundância será avaliada nas próximas etapas do projeto.
 
 A demanda média também foi comparada entre feriados e dias não classificados como feriado.
 
-```text
+```
 Não feriado → média ≈ 190,43
 Feriado     → média ≈ 156,87
 ```
@@ -358,7 +399,7 @@ A demanda média nos registros de feriado foi aproximadamente **17,6% menor**.
 
 A quantidade de registros em cada categoria foi:
 
-```text
+```
 Não feriado → 16.879 registros
 Feriado     →    500 registros
 ```
@@ -373,7 +414,7 @@ O resultado representa uma associação observada nos dados e não significa nec
 
 Para obter uma visão geral das principais variáveis numéricas contínuas, foi construída uma matriz de correlação utilizando:
 
-```text
+```
 temp
 atemp
 hum
@@ -383,7 +424,7 @@ cnt
 
 Os principais resultados foram:
 
-```text
+```
 temp       × cnt ≈ +0.405
 atemp      × cnt ≈ +0.401
 hum        × cnt ≈ -0.323
@@ -400,7 +441,7 @@ Variáveis categóricas representadas numericamente, como `season`, `weekday` e 
 
 Durante a análise dos dados foi identificada a seguinte relação:
 
-```text
+```
 casual + registered = cnt
 ```
 
@@ -418,17 +459,17 @@ Além dos insights sobre o dataset, a etapa de EDA também trouxe aprendizados i
 
 Entre eles:
 
-* Correlação não significa causalidade.
-* Uma média deve ser interpretada considerando também a quantidade de observações.
-* Correlação linear baixa não significa automaticamente que uma variável seja inútil.
-* Variáveis diferentes podem carregar informações muito semelhantes.
-* Médias gerais podem esconder padrões importantes presentes em subgrupos.
-* Cruzar variáveis pode revelar comportamentos que não aparecem quando elas são analisadas isoladamente.
-* A EDA deve ser guiada por perguntas, e não apenas pela geração de gráficos.
+- Correlação não significa causalidade.
+- Uma média deve ser interpretada considerando também a quantidade de observações.
+- Correlação linear baixa não significa automaticamente que uma variável seja inútil.
+- Variáveis diferentes podem carregar informações muito semelhantes.
+- Médias gerais podem esconder padrões importantes presentes em subgrupos.
+- Cruzar variáveis pode revelar comportamentos que não aparecem quando elas são analisadas isoladamente.
+- A EDA deve ser guiada por perguntas, e não apenas pela geração de gráficos.
 
 Durante essa etapa, a análise seguiu principalmente a lógica:
 
-```text
+```
 Pergunta
    ↓
 Análise
@@ -452,10 +493,10 @@ Variáveis como `hr`, `workingday`, `mnth`, `yr`, condições climáticas, tempe
 
 Também foram identificados pontos que exigirão atenção nas próximas etapas:
 
-* possível redundância entre `temp` e `atemp`;
-* baixa quantidade de registros em `weathersit = 4`;
-* Data Leakage em `casual` e `registered`;
-* possíveis interações entre variáveis, principalmente `hr` e `workingday`.
+- possível redundância entre `temp` e `atemp`;
+- baixa quantidade de registros em `weathersit = 4`;
+- Data Leakage em `casual` e `registered`;
+- possíveis interações entre variáveis, principalmente `hr` e `workingday`.
 
 Nenhuma variável isolada foi capaz de explicar completamente a demanda.
 
@@ -465,22 +506,15 @@ Com isso, a etapa de **Análise Exploratória dos Dados está concluída**.
 
 ---
 
-# 🧩 Próxima etapa — Feature Engineering
+# 🤖 Próxima etapa — Modelagem
 
-Com a EDA finalizada, o próximo passo do BikeCast será a etapa de **Feature Engineering**.
+Com a EDA e a construção inicial das features concluídas, o próximo passo será treinar e comparar modelos capazes de estimar a demanda horária de bicicletas.
 
-Nessa fase, os insights encontrados durante a exploração serão utilizados para decidir como representar e preparar melhor as variáveis antes do treinamento dos modelos.
+Antes do treinamento, será definida uma **divisão cronológica de treino, validação e teste**, adequada à natureza temporal do dataset. O conjunto de teste será preservado para a avaliação final, enquanto a validação orientará a comparação dos modelos e das três configurações de features.
 
-Algumas questões que serão investigadas:
+A etapa também deverá considerar o comportamento da variável `yr`, codificada apenas para os dois anos presentes no dataset, e a necessidade de aplicar as transformações de forma consistente a novos registros.
 
-* Quais variáveis devem entrar no modelo?
-* Como tratar variáveis categóricas?
-* `temp` e `atemp` devem permanecer juntas?
-* Faz sentido criar novas features a partir das informações temporais?
-* Existem interações entre variáveis que podem ser representadas?
-* Como preparar os dados para treinamento e avaliação?
-
-As decisões serão tomadas durante a própria etapa, evitando remover ou transformar variáveis apenas com base em uma única análise da EDA.
+Nenhum modelo foi treinado ou avaliado até este momento.
 
 ---
 
@@ -496,14 +530,14 @@ A aplicação deverá possuir duas áreas principais:
 
 Uma visualização dos principais resultados encontrados durante a análise exploratória, incluindo padrões relacionados a:
 
-* Horários
-* Dias úteis e não úteis
-* Meses e sazonalidade
-* Condições climáticas
-* Temperatura
-* Umidade
-* Diferenças entre os anos
-* Outros fatores relevantes identificados durante a EDA
+- Horários
+- Dias úteis e não úteis
+- Meses e sazonalidade
+- Condições climáticas
+- Temperatura
+- Umidade
+- Diferenças entre os anos
+- Outros fatores relevantes identificados durante a EDA
 
 ### 🤖 Previsão de demanda
 
@@ -511,7 +545,7 @@ Uma interface onde será possível informar características como horário, cond
 
 Exemplo conceitual:
 
-```text
+```
 Horário:            18:00
 Temperatura:        ...
 Umidade:            ...
@@ -531,12 +565,13 @@ A aplicação será desenvolvida somente depois que o modelo estiver treinado e 
 
 Atualmente, o projeto utiliza:
 
-* Python
-* Pandas
-* Matplotlib
-* VS Code
-* Git
-* GitHub
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- VS Code
+- Git
+- GitHub
 
 ### Tecnologias previstas
 
@@ -548,24 +583,22 @@ A aplicação web está planejada para ser desenvolvida utilizando **Streamlit**
 
 ## 🚧 Status do projeto
 
-### Etapa atual
+### Etapas concluídas
 
-**EDA concluída ✅**
+**Entendimento do problema, entendimento dos dados, limpeza inicial, EDA e Feature Engineering ✅**
 
-### Próxima etapa
+### Etapa atual / próxima etapa
 
-**Feature Engineering 🧩**
+**Modelagem — Etapa 6 ⏭️**
 
 O fluxo seguirá para:
 
-```text
-Feature Engineering     ⏭️
-        ↓
-Machine Learning
+```
+Modelagem               ⏭️
         ↓
 Avaliação dos modelos
         ↓
-Conclusões
+Conclusões e comunicação
         ↓
 Aplicação Web
         ↓
@@ -600,11 +633,12 @@ Dessa forma, o projeto busca percorrer um fluxo completo, partindo dos dados bru
 
 Estudante de Inteligência Artificial e Machine Learning na FIAP, desenvolvendo projetos práticos para aprofundar conhecimentos em:
 
-* Python
-* Data Science
-* Machine Learning
-* Inteligência Artificial
+- Python
+- Data Science
+- Machine Learning
+- Inteligência Artificial
 
 ---
 
 > 🚧 **Projeto em desenvolvimento**
+>
