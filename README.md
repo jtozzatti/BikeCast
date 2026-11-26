@@ -3,7 +3,7 @@
 ### Bike Sharing Demand Analysis & Forecasting
 
 > Projeto de **Data Science e Machine Learning** focado na análise, previsão e visualização da demanda por bicicletas compartilhadas.
-> 
+
 
 O **BikeCast** nasceu como um projeto prático para aplicar, de ponta a ponta, conceitos de **Python, análise de dados, exploração de dados e Machine Learning** em um problema realista.
 
@@ -49,13 +49,13 @@ O desenvolvimento segue um fluxo inspirado no processo utilizado em projetos de 
         ↓
 5. Criar features                       ✅
         ↓
-6. Modelar                              ⏭️
+6. Modelar                              ✅
         ↓
-7. Avaliar
+7. Avaliar                              ✅
         ↓
-8. Entregar / comunicar
+8. Entregar / comunicar                 ✅
         ↓
-9. Aplicação + Deploy
+9. Aplicação + Deploy                   ⏭️
 ```
 
 A ideia não é tratar essas etapas como caixas completamente isoladas.
@@ -69,6 +69,10 @@ A aplicação será desenvolvida somente após a conclusão da parte principal d
 ## 📊 Dataset
 
 O projeto utiliza o **Bike Sharing Dataset**, disponibilizado pelo **UCI Machine Learning Repository**.
+
+Fonte: [Bike Sharing Dataset — UCI](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset).
+
+Período: 2011–2012. Arquivo utilizado: `hour.csv`.
 
 O dataset utilizado contém **17.379 registros e 17 variáveis**, com informações relacionadas ao uso de um sistema de bicicletas compartilhadas, incluindo:
 
@@ -160,13 +164,37 @@ Ela representa o **número total de bicicletas alugadas em determinado período*
 - [x]  Verificação de valores ausentes, tipos numéricos e alinhamento com o target
 - [x]  Conclusão da construção inicial das features
 
-### Modelagem — próxima etapa
+### Modelagem
 
-- [ ]  Definir divisão cronológica de treino, validação e teste
-- [ ]  Estruturar o pré-processamento para evitar vazamento de informações entre períodos
-- [ ]  Treinar um modelo baseline e modelos de regressão
-- [ ]  Comparar os conjuntos de features usando validação temporal
-- [ ]  Selecionar a abordagem para avaliação final
+- [x] Definição da divisão cronológica de treino, validação e teste
+- [x] Criação do pré-processamento reutilizável
+- [x] Treinamento do baseline e de três algoritmos de regressão
+- [x] Comparação das três configurações de features
+- [x] Seleção do modelo pelo MAE de validação
+
+### Avaliação
+
+- [x] Retreinamento com treino e validação
+- [x] Avaliação no conjunto de teste
+- [x] Comparação com o baseline
+- [x] Análise dos resíduos e erros por horário, tipo de dia e clima
+- [x] Permutation Importance
+- [x] Exportação dos relatórios e gráficos
+- [x] Persistência e teste de recarregamento do modelo
+
+### Comunicação e documentação
+
+- [x] Organização dos resultados e limitações
+- [x] Criação do `requirements.txt`
+- [x] Atualização da documentação técnica
+
+### Aplicação + Deploy — próxima etapa
+
+- [ ] Planejamento da aplicação
+- [ ] Dashboard interativo
+- [ ] Simulador de demanda
+- [ ] Integração com o modelo treinado
+- [ ] Testes e deploy público
 
 ---
 
@@ -191,8 +219,7 @@ Com base nos resultados da EDA, foram preparadas diferentes representações das
 
 Na validação do conjunto completo, foram identificadas **14 colunas `int64` e 10 `float64`**. Todas as features são numéricas, não foram encontrados valores ausentes e os três conjuntos preservam o alinhamento dos índices com o target.
 
-> **Importante:** essas configurações ainda não foram comparadas por desempenho preditivo. A escolha das melhores features dependerá de experimentos com validação temporal, sem utilizar o conjunto de teste para selecionar transformações. O pré-processamento também deverá ser reproduzível para dados futuros.
-> 
+> **Resultado:** o conjunto completo apresentou o menor MAE de validação. O pré-processamento foi centralizado em `preprocessamento.py`, com categorias fixas para preservar a consistência das entradas.
 
 ---
 
@@ -382,7 +409,7 @@ Isso sugere que `temp` e `atemp` podem carregar informações bastante semelhant
 
 Nenhuma variável será removida apenas com base nessa análise.
 
-A possível redundância será avaliada nas próximas etapas do projeto.
+A possível redundância foi avaliada na modelagem. A retirada de `atemp` aumentou ligeiramente o MAE de validação nos três algoritmos, sem demonstrar que a variável seja indispensável.
 
 ---
 
@@ -449,7 +476,7 @@ As variáveis `casual` e `registered` representam diretamente partes da variáve
 
 Utilizá-las como entradas para prever `cnt` faria com que o modelo tivesse acesso indireto à própria resposta, caracterizando **Data Leakage**.
 
-Por esse motivo, essas variáveis não serão utilizadas como preditoras do modelo.
+Por esse motivo, essas variáveis foram excluídas dos preditores do modelo.
 
 ---
 
@@ -506,21 +533,205 @@ Com isso, a etapa de **Análise Exploratória dos Dados está concluída**.
 
 ---
 
-# 🤖 Próxima etapa — Modelagem
+# 🤖 Modelagem — Etapa 6 concluída
 
-Com a EDA e a construção inicial das features concluídas, o próximo passo será treinar e comparar modelos capazes de estimar a demanda horária de bicicletas.
+A modelagem foi conduzida como um problema de regressão, utilizando `cnt` como variável-alvo.
 
-Antes do treinamento, será definida uma **divisão cronológica de treino, validação e teste**, adequada à natureza temporal do dataset. O conjunto de teste será preservado para a avaliação final, enquanto a validação orientará a comparação dos modelos e das três configurações de features.
+## 📅 Divisão temporal
 
-A etapa também deverá considerar o comportamento da variável `yr`, codificada apenas para os dois anos presentes no dataset, e a necessidade de aplicar as transformações de forma consistente a novos registros.
+| Conjunto | Registros | Período |
+| --- | ---: | --- |
+| Treino (70%) | 12.165 | 01/01/2011 00h a 27/05/2012 01h |
+| Validação (15%) | 2.607 | 27/05/2012 02h a 12/09/2012 16h |
+| Teste (15%) | 2.607 | 12/09/2012 17h a 31/12/2012 23h |
 
-Nenhum modelo foi treinado ou avaliado até este momento.
+A ordem cronológica foi preservada, sem embaralhamento na divisão principal. O teste não foi utilizado para selecionar o modelo.
+
+## 🧪 Experimentos
+
+Foram comparados um `DummyRegressor` baseado na média do treino e três algoritmos: regressão linear, Random Forest e HistGradientBoosting. Cada algoritmo de regressão foi avaliado nas três configurações de features.
+
+| Modelo | Features | MAE | RMSE | R² |
+| --- | --- | ---: | ---: | ---: |
+| Gradient Boosting | completo | 43,8649 | 64,9577 | 0,9153 |
+| Gradient Boosting | sem_atemp | 44,2414 | 65,2389 | 0,9146 |
+| Gradient Boosting | temporal_ciclico | 46,1958 | 66,2285 | 0,9120 |
+| Random Forest | completo | 51,8004 | 79,2092 | 0,8741 |
+| Random Forest | sem_atemp | 52,7777 | 80,5703 | 0,8697 |
+| Random Forest | temporal_ciclico | 54,0691 | 82,1035 | 0,8647 |
+| Regressão Linear | completo | 135,5715 | 173,1956 | 0,3981 |
+| Regressão Linear | sem_atemp | 135,6926 | 173,0845 | 0,3988 |
+| Regressão Linear | temporal_ciclico | 136,3228 | 174,3913 | 0,3897 |
+| Baseline | média | 194,1351 | 253,9698 | -0,2943 |
+
+Resultados no conjunto de validação. As previsões negativas foram limitadas a zero.
+
+## 🏆 Modelo selecionado
+
+```python
+HistGradientBoostingRegressor(
+    max_iter=200,
+    learning_rate=0.1,
+    random_state=42
+)
+```
+
+O conjunto completo de 24 features apresentou o menor MAE, com redução de aproximadamente **77,40%** em relação ao baseline de validação.
+
+Os modelos de árvores apresentaram desempenho superior à regressão linear nos experimentos realizados, sugerindo a relevância de padrões não lineares e interações entre variáveis. A remoção das variáveis temporais originais piorou o MAE nas configurações testadas; não foi realizado um experimento sem nenhuma codificação cíclica.
+
+Resultados completos: [`resultados_modelagem.csv`](resultados_modelagem.csv).
+
+---
+
+# 📊 Avaliação — Etapa 7 concluída
+
+O modelo selecionado foi retreinado com 14.772 registros de treino e validação e avaliado nos 2.607 registros de teste.
+
+| Métrica | Baseline | Modelo final |
+| --- | ---: | ---: |
+| MAE | 167,7120 | **41,3317** |
+| RMSE | 221,8663 | **64,3239** |
+| R² | -0,0639 | **0,9106** |
+
+A redução do MAE em relação ao baseline foi de **75,36%**. O erro absoluto médio foi de aproximadamente 41 aluguéis por hora. O R² é um coeficiente de determinação, não uma medida de acurácia de classificação.
+
+![Comparação do MAE](reports/figures/07_comparacao_mae.png)
+
+## 📈 Valores reais x previstos
+
+![Primeiros sete dias de teste](reports/figures/01_real_vs_previsto.png)
+
+![Dispersão das previsões](reports/figures/02_dispersao_previsoes.png)
+
+## 🔍 Análise dos resíduos
+
+O resíduo foi definido como valor real menos valor previsto.
+
+| Indicador | Resultado |
+| --- | ---: |
+| Resíduo médio | 11,22 |
+| Mediana do erro absoluto | 23,83 |
+| Percentil 90 do erro absoluto | 103,05 |
+
+O resíduo médio positivo indica uma tendência de subestimação no período avaliado.
+
+![Distribuição dos resíduos](reports/figures/03_distribuicao_residuos.png)
+
+![Resíduos versus previsões](reports/figures/04_residuos_vs_previsoes.png)
+
+## ⏰ Erros por horário
+
+| Horário | MAE |
+| --- | ---: |
+| 08h | 90,80 |
+| 17h | 88,58 |
+| 18h | 80,15 |
+| 16h | 66,83 |
+| 15h | 58,30 |
+
+Os maiores erros absolutos ocorreram principalmente em horários de maior demanda. Parte dessa diferença pode estar associada à própria escala dos aluguéis.
+
+![Erros por horário](reports/figures/05_erro_por_hora.png)
+
+## 🌦️ Erros por tipo de dia e clima
+
+| Grupo | MAE |
+| --- | ---: |
+| Dias úteis | 39,11 |
+| Dias não úteis | 45,83 |
+| Clima 1 | 37,07 |
+| Clima 2 | 44,15 |
+| Clima 3 | 63,94 |
+
+Não houve registros de clima 4 no teste. Os resultados por grupo devem ser interpretados considerando suas diferentes distribuições e quantidades de observações.
+
+## 🧠 Importância das features
+
+Foi utilizada Permutation Importance, com dez repetições, para medir o aumento médio do MAE após embaralhar individualmente cada feature.
+
+| Feature | Aumento médio do MAE |
+| --- | ---: |
+| hr | 82,5359 |
+| hr_cos | 40,8769 |
+| workingday | 35,0229 |
+| hr_sin | 24,3478 |
+| temp | 21,5774 |
+
+![Importância das features](reports/figures/06_importancia_features.png)
+
+A importância não representa causalidade e pode ser influenciada por variáveis correlacionadas ou derivadas umas das outras. Features constantes no teste podem apresentar importância zero sem serem necessariamente inúteis.
+
+## 💾 Exportação do modelo
+
+O artefato `models/bikecast_model.joblib` contém o modelo, a ordem das features, as métricas, os períodos de treinamento e teste e a versão do Scikit-learn. O recarregamento foi validado pela comparação das cinco primeiras previsões.
+
+## ⚠️ Limitações e trabalhos futuros
+
+- Dados históricos de 2011 e 2012, sem validação para demanda atual.
+- `yr` é binária e não representa diretamente anos posteriores.
+- Não há informações detalhadas por estação de bicicletas ou sobre eventos externos.
+- Condições meteorológicas extremas têm pouca representação.
+- Erros absolutos maiores nos horários de pico.
+- Não foi realizada busca extensiva de hiperparâmetros nem validação em múltiplas janelas temporais.
+- A EDA foi realizada antes da divisão, portanto o teste não ficou totalmente isolado da exploração inicial.
+- O early stopping padrão do algoritmo pode utilizar uma divisão interna aleatória.
+- As variáveis meteorológicas são observadas no dataset; o uso de previsões meteorológicas reais exigiria validação adicional.
+
+---
+
+# 📝 Comunicação e documentação — Etapa 8
+
+A documentação reúne os resultados, decisões técnicas, gráficos, limitações e instruções de reprodução do projeto.
+
+## 📁 Estrutura dos principais arquivos
+
+```text
+BikeCast/
+├── data/hour.csv
+├── feature_engineering.py
+├── preprocessamento.py
+├── modelagem.py
+├── avaliacao.py
+├── resultados_modelagem.csv
+├── models/
+│   └── bikecast_model.joblib
+├── reports/
+│   ├── figures/
+│   ├── metricas_avaliacao.csv
+│   ├── previsoes_teste.csv
+│   ├── importancia_features.csv
+│   ├── erros_por_hora.csv
+│   ├── erros_por_dia.csv
+│   ├── erros_por_clima.csv
+│   └── maiores_erros.csv
+├── requirements.txt
+└── README.md
+```
+
+## ⚙️ Como executar
+
+Ambiente utilizado: Python 3.14.0 e Scikit-learn 1.9.1. As dependências estão registradas no `requirements.txt`.
+
+```powershell
+git clone https://github.com/jtozzatti/BikeCast.git
+cd BikeCast
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python modelagem.py
+python avaliacao.py
+```
+
+No Linux/macOS, a ativação do ambiente é feita com `source .venv/bin/activate`.
+
+A modelagem gera os resultados dos experimentos; a avaliação gera os relatórios, gráficos e o modelo final. Utilize apenas artefatos Joblib de origem confiável.
 
 ---
 
 ## 🌐 Aplicação Web
 
-Após a conclusão das etapas de análise e Machine Learning, o BikeCast será transformado em uma **aplicação web interativa**.
+Com as etapas de análise e Machine Learning concluídas, o BikeCast será transformado em uma **aplicação web interativa**.
 
 A ideia é criar uma interface que permita apresentar o projeto de forma mais visual e acessível, sem remover a documentação técnica e o código disponíveis neste repositório.
 
@@ -557,7 +768,7 @@ Dia útil:           Sim
 Demanda estimada: ...
 ```
 
-A aplicação será desenvolvida somente depois que o modelo estiver treinado e avaliado, garantindo que a interface seja uma camada de apresentação de um projeto de Machine Learning já estruturado.
+A aplicação será uma camada de apresentação do modelo já treinado e avaliado. Inicialmente, funcionará como simulador de cenários históricos de 2011–2012, sem alegar capacidade validada de prever a demanda atual. O desenvolvimento e o deploy ainda estão pendentes.
 
 ---
 
@@ -569,13 +780,15 @@ Atualmente, o projeto utiliza:
 - Pandas
 - NumPy
 - Matplotlib
+- Scikit-learn
+- Joblib
 - VS Code
 - Git
 - GitHub
 
 ### Tecnologias previstas
 
-Conforme o projeto avançar, novas ferramentas serão adicionadas para as etapas de Machine Learning, aplicação e deploy.
+Novas ferramentas poderão ser adicionadas durante o desenvolvimento da aplicação e do deploy. A compatibilidade do ambiente Python com a plataforma de hospedagem ainda deverá ser verificada.
 
 A aplicação web está planejada para ser desenvolvida utilizando **Streamlit**, mantendo grande parte do projeto dentro do ecossistema Python.
 
@@ -585,24 +798,24 @@ A aplicação web está planejada para ser desenvolvida utilizando **Streamlit**
 
 ### Etapas concluídas
 
-**Entendimento do problema, entendimento dos dados, limpeza inicial, EDA e Feature Engineering ✅**
+**Entendimento do problema, entendimento dos dados, limpeza inicial, EDA, Feature Engineering, Modelagem e Avaliação ✅**
 
-### Etapa atual / próxima etapa
+A documentação da Etapa 8 está consolidada nesta versão. Após sua publicação, estarão concluídas **8 de 9 etapas (88,9%)**.
 
-**Modelagem — Etapa 6 ⏭️**
+### Próxima etapa
 
-O fluxo seguirá para:
+**Aplicação Web + Deploy — Etapa 9 ⏭️**
 
-```
-Modelagem               ⏭️
+```text
+Planejamento da aplicação
         ↓
-Avaliação dos modelos
+Dashboard e simulador de demanda
         ↓
-Conclusões e comunicação
+Integração com o modelo treinado
         ↓
-Aplicação Web
+Testes e validação
         ↓
-Deploy
+Deploy público
 ```
 
 ---
