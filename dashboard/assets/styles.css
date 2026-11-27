@@ -1,0 +1,12 @@
+.block-container {max-width: 1600px; padding: 2.5rem 2rem;}
+[data-testid="stSidebar"] {border-right:1px solid #243247;}
+[data-testid="stSidebar"] [role="radiogroup"] label {width:100%; padding:10px; border-radius:8px;}
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {background:#143344; color:#22D3EE;}
+.metric-card {background:linear-gradient(145deg,#111B2B,#0D1624);border:1px solid #243247;border-radius:14px;padding:20px;min-height:145px;transition:transform .2s,border-color .2s;}
+.metric-card:hover {transform:translateY(-3px);border-color:#22D3EE;}
+.metric-label {color:#94A3B8;font-size:14px;}
+.metric-value {font-size:32px;font-weight:700;margin:8px 0;}
+.metric-description {color:#94A3B8;font-size:12px;}
+h1,h2,h3 {letter-spacing:-.025em;}
+@media(max-width:768px){.block-container{padding:2rem 1rem;}}
+@media(prefers-reduced-motion:reduce){.metric-card{transition:none;}}
